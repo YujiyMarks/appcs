@@ -1,0 +1,222 @@
+
+import streamlit as st #biblioteca para a parte visual
+
+# bibliotecas para gerar o pdf
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, LongTable, TableStyle, Image, PageBreak
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
+
+styles = getSampleStyleSheet() # estilos dos paragrafos
+
+from reportlab.rl_config import defaultPageSize
+from reportlab.lib.units import inch, cm
+PAGE_HEIGHT=defaultPageSize[1]; PAGE_WIDTH=defaultPageSize[0]
+
+#from Flask import send_file
+
+#conexão com o banco de dados
+import sqlite3
+
+dados = sqlite3.connect('bd_app.db')
+cursor = dados.cursor()
+
+
+# definição do modelo da capa
+def capa(canvas, doc): 
+    canvas.setAuthor("BrunoY")
+    canvas.setTitle("Relatorio")
+
+    canvas.drawImage("cs.png", PAGE_WIDTH/2.0-85, PAGE_HEIGHT-170, width=200,height=80) 
+
+    canvas.bookmarkPage("capa") 
+    canvas.addOutlineEntry("Capa","capa")
+
+    canvas.setFont('Times-Roman',11)
+    canvas.drawString(1.5*inch, 2.1 * inch, "Legenda: C - Conforme / NC - Não Conforme / NA - Não Aplicável / PA - Ponto de Atenção")
+    
+    canvas.line(10,140,PAGE_WIDTH,140) 
+    canvas.setFont('Times-Roman',8)
+    #canvas.drawString(inch, 0.9*inch, "Page %d" % (doc.page))  
+    canvas.drawString(2.5*inch, 1.6*inch, "Canal Solar - Consultoria & Serviços | Departamento de Engenharia")
+    canvas.drawString(2.5*inch, 1.45*inch, "R. Paulo César Fidélis, - Lot. Res. Vila Bella, Campinas - SP, 13087-727")
+    canvas.drawString(2.5*inch, 1.30*inch, "engenharia@canalsolar.com.br | canalsolar.com.br")
+    canvas.drawString(2.5*inch, 1.15*inch, "(19)99605-9172 | (19) 99899-7915") 
+
+
+# definição do modelo das outras paginas
+def paginas(canvas, doc):
+     canvas.drawImage("cs.png", PAGE_WIDTH-100, PAGE_HEIGHT-100, width=100,height=50)
+
+     canvas.setFont('Times-Roman',8)
+     canvas.drawString(inch, 0.75*inch, "Page %d" % (doc.page))  
+     canvas.drawString(2.5*inch, 0.70*inch, "Canal Solar - Consultoria & Serviços | Departamento de Engenharia")
+     canvas.drawString(2.5*inch, 0.55*inch, "R. Paulo César Fidélis, - Lot. Res. Vila Bella, Campinas - SP, 13087-727")
+     canvas.drawString(2.5*inch, 0.40*inch, "engenharia@canalsolar.com.br | canalsolar.com.br")
+     canvas.drawString(2.5*inch, 0.25*inch, "(19)99605-9172 | (19) 99899-7915") 
+
+
+# função para gerar o pdf
+def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,analises,obs):
+    doc = SimpleDocTemplate(f"relatorio_inspecao_{ufv}.pdf", pagesize=letter,leftMargin=inch,rightMargin=inch,
+                    topMargin=inch,bottomMargin=inch,title='Relatorio',author='BrunoY')
+    relatorio = []
+
+    #definição dos estilos
+    titulo_estilo = styles['Heading2']
+    subtitulo_estilo = styles['Heading4']
+    conteudo_estilo = ParagraphStyle('normal', fontName='Helvetica', fontSize=10, alignment=TA_CENTER)
+    capa_estilo = ParagraphStyle('normal', fontName='Helvetica', fontSize=20, alignment=TA_CENTER)
+
+
+    # seção da capa
+    relatorio.append(Spacer(1,70))
+
+    relatorio.append(Paragraph(f"UFV {ufv} - {cliente}",capa_estilo))
+    relatorio.append(Spacer(1,50))
+
+    #relatorio.append(Paragraph(f"{cliente}",capa_estilo))
+    #relatorio.append(Spacer(1,30))
+
+    relatorio.append(Paragraph(f"Imagem Geral",conteudo_estilo))
+    relatorio.append(Spacer(1,15))
+    img_ger = Image(img, width=290,height=150)
+    imagem_geral = [[img_ger]]
+    imagem_capa = Table(imagem_geral, colWidths=300, rowHeights=160) 
+    imagem_capa.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                       ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                       ('ALIGN',(1,1),(-3,-3),'CENTER'),
+                       ('VALIGN',(0,-1),(-1,-1),'MIDDLE'),
+                       ('TEXTCOLOR',(0,0),(1,-1),colors.black),('FONTSIZE', (0,0), (-1,-1), 12)]))
+    relatorio.append(imagem_capa)
+    relatorio.append(Spacer(1,50))
+
+    relatorio.append(Paragraph("Relatório de Inspeção Visual",capa_estilo))
+    relatorio.append(Spacer(1,30))
+
+    dados_tabela = [["Inspetor", inspetor],["Revisor",revisor],["Responsável","Bruno Kikumoto"]]
+    tabela_capa = Table(dados_tabela, colWidths=150, rowHeights=30) 
+    tabela_capa.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                       ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                       ('ALIGN',(1,1),(-3,-3),'CENTER'),
+                       ('VALIGN',(0,-1),(-1,-1),'MIDDLE'),
+                       ('TEXTCOLOR',(0,0),(1,-1),colors.black),('FONTSIZE', (0,0), (-1,-1), 12)]))
+    relatorio.append(tabela_capa)
+
+    relatorio.append(Spacer(1,30))
+    relatorio.append(Paragraph(f"Data de Elaboração: {data}"))
+
+
+    # seção dos itens
+    relatorio.append(PageBreak())
+
+    titulo = Paragraph("RESULTADOS OBTIDOS", capa_estilo)
+    relatorio.append(titulo)
+    relatorio.append(Spacer(1,30))
+
+    for i in range(num_items):
+        dados_itens = [[f"Item {i+1} - {itens[i]}"]]
+        tabela_itens = Table(dados_itens, colWidths=250, rowHeights=30) 
+        tabela_itens.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                       ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                       ('ALIGN',(1,1),(-3,-3),'CENTER'),
+                       ('VALIGN',(0,-1),(-1,-1),'MIDDLE'),
+                       ('TEXTCOLOR',(0,0),(1,-1),colors.black),('FONTSIZE', (0,0), (-1,-1), 12)]))
+        relatorio.append(tabela_itens)
+
+        img_item = Image(imagens[i], width=240,height=150)
+        dados_itens = [[img_item]]
+        tabela_itens = Table(dados_itens, colWidths=250, rowHeights=160) 
+        tabela_itens.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                       ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                       ('ALIGN',(1,1),(-3,-3),'CENTER'),
+                       ('VALIGN',(0,-1),(-1,-1),'MIDDLE'),
+                       ('TEXTCOLOR',(0,0),(1,-1),colors.black),('FONTSIZE', (0,0), (-1,-1), 12)]))
+        relatorio.append(tabela_itens)
+
+        dados_itens = [[f"Análise: {analises[i]}"],[f"Observação: {obs[i]}"]]
+        tabela_itens = Table(dados_itens, colWidths=250, rowHeights=30) 
+        tabela_itens.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                       ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                       ('ALIGN',(1,1),(-3,-3),'CENTER'),
+                       ('VALIGN',(0,-1),(-1,-1),'MIDDLE'),
+                       ('TEXTCOLOR',(0,0),(1,-1),colors.black),('FONTSIZE', (0,0), (-1,-1), 12)]))
+        relatorio.append(tabela_itens)
+
+        relatorio.append(Spacer(1,50))
+
+    #relatorio.append(PageBreak())
+    doc.build(relatorio, onFirstPage=capa, onLaterPages=paginas)
+    #send_file('test.pdf', as_attachment=True)
+    st.success(f"Relatório gerado com sucesso em relatorio_inspecao_{ufv}.pdf")
+    
+
+# criação da tela de relatório
+def main():
+    # configurações iniciais
+    st.set_page_config(page_title="RelatorioCS",page_icon="page_facing_up:",)
+    st.sidebar.header("Inspeção Visual")
+
+    st.title("Relatório de Inspeção Visual")
+
+    # inserção dos campos para recebimento dos valores
+    cursor.execute("SELECT * FROM Usinas")
+    lista = []
+    for linha in cursor.fetchall():
+        lista.append(linha[1])
+    ufv = st.selectbox("UFV:",lista)
+
+    cursor.execute("SELECT * FROM Clientes")
+    lista = []
+    for linha in cursor.fetchall():
+        lista.append(linha[1])
+    cliente = st.selectbox("Cliente",lista)
+
+    cursor.execute("SELECT * FROM Funcionarios")
+    lista = []
+    for linha in cursor.fetchall():
+        lista.append(linha[1])
+    inspetor = st.selectbox("Responsável",lista)
+    revisor = st.selectbox("Revisor",lista)
+    
+    data = st.date_input("Data de elaboração:")
+    img = st.file_uploader("Imagem geral:")
+
+
+    # inserção dos campos para recebimento dos itens
+    st.header("ITENS")
+    # botão para escolha da quantidade de itens
+    num_items = st.number_input("Número de itens:", min_value=1, step=1, value=1)
+
+    itens = []
+    imagens = []
+    analises = []
+    obs = []
+    # inserção dos campos dos itens de acordo com o número de itens
+    for i in range(num_items):
+        st.subheader(f"Item {i+1}")
+        cursor.execute("SELECT * FROM Equipamentos")
+        lista = []
+        for linha in cursor.fetchall():
+            lista.append(linha[1])
+        item = st.selectbox(f"Escolha o item {i+1}:",lista)
+        itens.append(item)
+        imagem = st.file_uploader(f"Insira a imagem do item {i+1}:",type=['jpg','png'])
+        imagens.append(imagem)
+        analise = st.radio(f"Análise do item {i+1}:",["C","NC","NA","PA"],horizontal=True)
+        analises.append(analise)
+        observacao = st.text_input(f"Digite a observação do item {i+1}:")
+        obs.append(observacao)
+
+    # botão para geração do relatório
+    if st.button("Gerar Relatório"):
+        if itens:
+            gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,analises,obs)
+        else:
+            st.warning("Adicione pelo menos um item para gerar o relatório PDF.")
+
+
+if __name__ == "__main__":
+    main()
