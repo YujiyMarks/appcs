@@ -15,7 +15,7 @@ from reportlab.rl_config import defaultPageSize
 from reportlab.lib.units import inch, cm
 PAGE_HEIGHT=defaultPageSize[1]; PAGE_WIDTH=defaultPageSize[0]
 
-#from Flask import send_file
+import io
 
 #conexão com o banco de dados
 import sqlite3
@@ -60,7 +60,8 @@ def paginas(canvas, doc):
 
 # função para gerar o pdf
 def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,analises,obs):
-    doc = SimpleDocTemplate(f"relatorio_inspecao_{ufv}.pdf", pagesize=letter,leftMargin=inch,rightMargin=inch,
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter,leftMargin=inch,rightMargin=inch,
                     topMargin=inch,bottomMargin=inch,title='Relatorio',author='BrunoY')
     relatorio = []
 
@@ -149,19 +150,20 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,anal
 
     #relatorio.append(PageBreak())
     doc.build(relatorio, onFirstPage=capa, onLaterPages=paginas)
-    #send_file('test.pdf', as_attachment=True)
-    st.success(f"Relatório gerado com sucesso em relatorio_inspecao_{ufv}.pdf")
+    st.success("Relatório gerado com sucesso!")
+    st.download_button(label="Baixar PDF", data=buffer.getvalue(), file_name=f"relatorio_inspecao_{ufv}.pdf", mime="application/pdf")
     
+
 
 # criação da tela de relatório
 def main():
     # configurações iniciais
-    st.set_page_config(page_title="RelatorioCS",page_icon="page_facing_up:",)
+    st.set_page_config(page_title="Relatorio CS",page_icon="page_facing_up:",)
     st.sidebar.header("Inspeção Visual")
 
     st.title("Relatório de Inspeção Visual")
 
-    # inserção dos campos para recebimento dos valores
+    # inserção dos campos para recebimento dos valores do banco de dados
     cursor.execute("SELECT * FROM Usinas")
     lista = []
     for linha in cursor.fetchall():
@@ -212,10 +214,10 @@ def main():
 
     # botão para geração do relatório
     if st.button("Gerar Relatório"):
-        if itens:
+        if itens:   
             gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,analises,obs)
         else:
-            st.warning("Adicione pelo menos um item para gerar o relatório PDF.")
+            st.warning("Erro ao gerar o PDF.")
 
 
 if __name__ == "__main__":
