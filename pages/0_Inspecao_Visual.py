@@ -145,8 +145,9 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,anal
                        ('VALIGN',(0,-1),(-1,-1),'MIDDLE'),
                        ('TEXTCOLOR',(0,0),(1,-1),colors.black),('FONTSIZE', (0,0), (-1,-1), 12)]))
         relatorio.append(tabela_itens)
-
-        relatorio.append(Spacer(1,50))
+        
+        if i < num_items-1:
+            relatorio.append(Spacer(1,50))
 
     #relatorio.append(PageBreak())
     doc.build(relatorio, onFirstPage=capa, onLaterPages=paginas)
