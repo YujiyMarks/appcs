@@ -21,12 +21,12 @@ if st.button("Cadastrar funcionário"):
     
 cliente = st.text_input("Digite o nome do cliente a ser cadastrado:")
 if st.button("Cadastrar cliente"):
-    cursor.execute(f"INSERT INTO Funcionarios (nome) VALUES ('{cliente}')")
+    cursor.execute(f"INSERT INTO Clientes (nome) VALUES ('{cliente}')")
     dados.commit()
 
 equipamento = st.text_input("Digite o nome do equipamento a ser cadastrado:")
 if st.button("Cadastrar equipamento"):
-    cursor.execute(f"INSERT INTO Funcionarios (nome) VALUES ('{equipamento}')")
+    cursor.execute(f"INSERT INTO Equipamentos (nome) VALUES ('{equipamento}')")
     dados.commit()
 
 
