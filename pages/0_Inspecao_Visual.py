@@ -59,7 +59,7 @@ def paginas(canvas, doc):
 
 
 # função para gerar o pdf
-def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,analises,obs):
+def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,imagens2,analises,obs):
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter,leftMargin=inch,rightMargin=inch,
                     topMargin=inch,bottomMargin=inch,title='Relatorio',author='BrunoY')
@@ -119,7 +119,7 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,anal
 
     for i in range(num_items):
         dados_itens = [[f"Item {i+1} - {itens[i]}"]]
-        tabela_itens = Table(dados_itens, colWidths=250, rowHeights=30) 
+        tabela_itens = Table(dados_itens, colWidths=300, rowHeights=30) 
         tabela_itens.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                        ('ALIGN',(1,1),(-3,-3),'CENTER'),
@@ -127,9 +127,19 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,anal
                        ('TEXTCOLOR',(0,0),(1,-1),colors.black),('FONTSIZE', (0,0), (-1,-1), 12)]))
         relatorio.append(tabela_itens)
 
-        img_item = Image(imagens[i], width=240,height=150)
+        img_item = Image(imagens[i], width=290,height=150)
         dados_itens = [[img_item]]
-        tabela_itens = Table(dados_itens, colWidths=250, rowHeights=160) 
+        tabela_itens = Table(dados_itens, colWidths=300, rowHeights=160) 
+        tabela_itens.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                       ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                       ('ALIGN',(1,1),(-3,-3),'CENTER'),
+                       ('VALIGN',(0,-1),(-1,-1),'MIDDLE'),
+                       ('TEXTCOLOR',(0,0),(1,-1),colors.black),('FONTSIZE', (0,0), (-1,-1), 12)]))
+        relatorio.append(tabela_itens)
+
+        img2_item = Image(imagens2[i], width=290,height=150)
+        dados_itens = [[img2_item]]
+        tabela_itens = Table(dados_itens, colWidths=300, rowHeights=160) 
         tabela_itens.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                        ('ALIGN',(1,1),(-3,-3),'CENTER'),
@@ -138,21 +148,21 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,anal
         relatorio.append(tabela_itens)
 
         dados_itens = [[f"Análise: {analises[i]}"],[f"Observação: {obs[i]}"]]
-        tabela_itens = Table(dados_itens, colWidths=250, rowHeights=30) 
+        tabela_itens = Table(dados_itens, colWidths=300, rowHeights=30) 
         tabela_itens.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                        ('ALIGN',(1,1),(-3,-3),'CENTER'),
                        ('VALIGN',(0,-1),(-1,-1),'MIDDLE'),
                        ('TEXTCOLOR',(0,0),(1,-1),colors.black),('FONTSIZE', (0,0), (-1,-1), 12)]))
         relatorio.append(tabela_itens)
-        
-        if i < num_items-1:
-            relatorio.append(Spacer(1,50))
 
-    #relatorio.append(PageBreak())
+        relatorio.append(PageBreak())
+        #if i < num_items-1:
+        #    relatorio.append(Spacer(1,50))
+
     doc.build(relatorio, onFirstPage=capa, onLaterPages=paginas)
     st.success("Relatório gerado com sucesso!")
-    st.download_button(label="Baixar PDF", data=buffer.getvalue(), file_name=f"relatorio_inspecao_{ufv}.pdf", mime="application/pdf")
+    st.download_button(label="Baixar PDF", data=buffer.getvalue(), file_name=f"relatorio_inspecao.pdf", mime="application/pdf")
     
 
 
@@ -195,6 +205,7 @@ def main():
 
     itens = []
     imagens = []
+    imagens2 = []
     analises = []
     obs = []
     # inserção dos campos dos itens de acordo com o número de itens
@@ -206,8 +217,10 @@ def main():
             lista.append(linha[1])
         item = st.selectbox(f"Escolha o item {i+1}:",lista)
         itens.append(item)
-        imagem = st.file_uploader(f"Insira a imagem do item {i+1}:",type=['jpg','png'])
+        imagem = st.file_uploader(f"Insira a 1º imagem do item {i+1}:",type=['jpg','png'])
         imagens.append(imagem)
+        imagem2 = st.file_uploader(f"Insira a 2º imagem do item {i+1}:",type=['jpg','png'])
+        imagens2.append(imagem2)
         analise = st.radio(f"Análise do item {i+1}:",["C","NC","NA","PA"],horizontal=True)
         analises.append(analise)
         observacao = st.text_input(f"Digite a observação do item {i+1}:")
@@ -216,7 +229,7 @@ def main():
     # botão para geração do relatório
     if st.button("Gerar Relatório"):
         if itens:   
-            gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,analises,obs)
+            gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,imagens2,analises,obs)
         else:
             st.warning("Erro ao gerar o PDF.")
 
