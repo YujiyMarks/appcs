@@ -6,7 +6,7 @@ dados = sqlite3.connect('bd_app.db')
 cursor = dados.cursor()
 
 
-st.set_page_config(page_title="RelatorioCS",page_icon="page_facing_down:",)
+st.set_page_config(page_title="Cadastro CS",page_icon=":gear:",)
 st.sidebar.header("Cadastro")
 
 st.title("Cadastro")
@@ -22,6 +22,17 @@ if st.button("Cadastrar funcionário"):
 cliente = st.text_input("Digite o nome do cliente a ser cadastrado:")
 if st.button("Cadastrar cliente"):
     cursor.execute(f"INSERT INTO Clientes (nome) VALUES ('{cliente}')")
+    dados.commit()
+
+
+ufv = st.text_input("Digite o nome da usina a ser cadastrada e escolha o cliente:")
+cursor.execute("SELECT * FROM Clientes")
+lista = []
+for linha in cursor.fetchall():
+    lista.append(linha[1])
+cliente_ufv = st.selectbox(f"Escolha o Cliente relativo a usina",lista)
+if st.button("Cadastrar UFV"):
+    cursor.execute(f"INSERT INTO Usinas (UFV, Cliente) VALUES ('{ufv}','{cliente_ufv}')")
     dados.commit()
 
 equipamento = st.text_input("Digite o nome do equipamento a ser cadastrado:")
