@@ -83,9 +83,9 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,imag
 
     relatorio.append(Paragraph(f"Imagem Geral",conteudo_estilo))
     relatorio.append(Spacer(1,15))
-    img_ger = Image(img, width=290,height=150)
+    img_ger = Image(img, width=340,height=190)
     imagem_geral = [[img_ger]]
-    imagem_capa = Table(imagem_geral, colWidths=300, rowHeights=160) 
+    imagem_capa = Table(imagem_geral, colWidths=350, rowHeights=200) 
     imagem_capa.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                        ('ALIGN',(1,1),(-3,-3),'CENTER'),
@@ -98,7 +98,7 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,imag
     relatorio.append(Spacer(1,30))
 
     dados_tabela = [["Inspetor", inspetor],["Revisor",revisor],["Responsável","Bruno Kikumoto"]]
-    tabela_capa = Table(dados_tabela, colWidths=150, rowHeights=30) 
+    tabela_capa = Table(dados_tabela, colWidths=175, rowHeights=30) 
     tabela_capa.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                        ('ALIGN',(1,1),(-3,-3),'CENTER'),
@@ -119,7 +119,7 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,imag
 
     for i in range(num_items):
         dados_itens = [[f"Item {i+1} - {itens[i]}"]]
-        tabela_itens = Table(dados_itens, colWidths=300, rowHeights=30) 
+        tabela_itens = Table(dados_itens, colWidths=350, rowHeights=30) 
         tabela_itens.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                        ('ALIGN',(1,1),(-3,-3),'CENTER'),
@@ -127,9 +127,9 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,imag
                        ('TEXTCOLOR',(0,0),(1,-1),colors.black),('FONTSIZE', (0,0), (-1,-1), 12)]))
         relatorio.append(tabela_itens)
 
-        img_item = Image(imagens[i], width=290,height=150)
+        img_item = Image(imagens[i], width=340,height=190)
         dados_itens = [[img_item]]
-        tabela_itens = Table(dados_itens, colWidths=300, rowHeights=160) 
+        tabela_itens = Table(dados_itens, colWidths=350, rowHeights=200) 
         tabela_itens.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                        ('ALIGN',(1,1),(-3,-3),'CENTER'),
@@ -137,9 +137,9 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,imag
                        ('TEXTCOLOR',(0,0),(1,-1),colors.black),('FONTSIZE', (0,0), (-1,-1), 12)]))
         relatorio.append(tabela_itens)
 
-        img2_item = Image(imagens2[i], width=290,height=150)
+        img2_item = Image(imagens2[i], width=340,height=190)
         dados_itens = [[img2_item]]
-        tabela_itens = Table(dados_itens, colWidths=300, rowHeights=160) 
+        tabela_itens = Table(dados_itens, colWidths=350, rowHeights=200) 
         tabela_itens.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                        ('ALIGN',(1,1),(-3,-3),'CENTER'),
@@ -148,7 +148,7 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,imag
         relatorio.append(tabela_itens)
 
         dados_itens = [[f"Análise: {analises[i]}"],[f"Observação: {obs[i]}"]]
-        tabela_itens = Table(dados_itens, colWidths=300, rowHeights=30) 
+        tabela_itens = Table(dados_itens, colWidths=350, rowHeights=30) 
         tabela_itens.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                        ('ALIGN',(1,1),(-3,-3),'CENTER'),
