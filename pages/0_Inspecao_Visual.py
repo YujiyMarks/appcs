@@ -37,7 +37,7 @@ def capa(canvas, doc):
     canvas.setFont('Times-Roman',11)
     canvas.drawString(1.5*inch, 1.5 * inch, "Legenda: C - Conforme / NC - Não Conforme / NA - Não Aplicável / PA - Ponto de Atenção")
     
-    canvas.line(10,140,PAGE_WIDTH,140) 
+    canvas.line(10,100,PAGE_WIDTH,100) 
     canvas.setFont('Times-Roman',8)
     #canvas.drawString(inch, 0.9*inch, "Page %d" % (doc.page))  
     canvas.drawString(2.5*inch, 1*inch, "Canal Solar - Consultoria & Serviços | Departamento de Engenharia")
