@@ -35,15 +35,15 @@ def capa(canvas, doc):
     canvas.addOutlineEntry("Capa","capa")
 
     canvas.setFont('Times-Roman',11)
-    canvas.drawString(1.5*inch, 2.1 * inch, "Legenda: C - Conforme / NC - Não Conforme / NA - Não Aplicável / PA - Ponto de Atenção")
+    canvas.drawString(1.5*inch, 1.8 * inch, "Legenda: C - Conforme / NC - Não Conforme / NA - Não Aplicável / PA - Ponto de Atenção")
     
     canvas.line(10,140,PAGE_WIDTH,140) 
     canvas.setFont('Times-Roman',8)
     #canvas.drawString(inch, 0.9*inch, "Page %d" % (doc.page))  
-    canvas.drawString(2.5*inch, 1.6*inch, "Canal Solar - Consultoria & Serviços | Departamento de Engenharia")
-    canvas.drawString(2.5*inch, 1.45*inch, "R. Paulo César Fidélis, - Lot. Res. Vila Bella, Campinas - SP, 13087-727")
-    canvas.drawString(2.5*inch, 1.30*inch, "engenharia@canalsolar.com.br | canalsolar.com.br")
-    canvas.drawString(2.5*inch, 1.15*inch, "(19)99605-9172 | (19) 99899-7915") 
+    canvas.drawString(2.5*inch, 1.3*inch, "Canal Solar - Consultoria & Serviços | Departamento de Engenharia")
+    canvas.drawString(2.5*inch, 1.15*inch, "R. Paulo César Fidélis, - Lot. Res. Vila Bella, Campinas - SP, 13087-727")
+    canvas.drawString(2.5*inch, 1.0*inch, "engenharia@canalsolar.com.br | canalsolar.com.br")
+    canvas.drawString(2.5*inch, 0.95*inch, "(19)99605-9172 | (19) 99899-7915") 
 
 
 # definição do modelo das outras paginas
