@@ -35,15 +35,15 @@ def capa(canvas, doc):
     canvas.addOutlineEntry("Capa","capa")
 
     canvas.setFont('Times-Roman',11)
-    canvas.drawString(1.5*inch, 1.5 * inch, "Legenda: C - Conforme / NC - Não Conforme / NA - Não Aplicável / PA - Ponto de Atenção")
+    canvas.drawString(1.5*inch, 2.1 * inch, "Legenda: C - Conforme / NC - Não Conforme / NA - Não Aplicável / PA - Ponto de Atenção")
     
-    canvas.line(10,100,PAGE_WIDTH,100) 
+    canvas.line(10,140,PAGE_WIDTH,140) 
     canvas.setFont('Times-Roman',8)
     #canvas.drawString(inch, 0.9*inch, "Page %d" % (doc.page))  
-    canvas.drawString(2.5*inch, 1*inch, "Canal Solar - Consultoria & Serviços | Departamento de Engenharia")
-    canvas.drawString(2.5*inch, 0.85*inch, "R. Paulo César Fidélis, - Lot. Res. Vila Bella, Campinas - SP, 13087-727")
-    canvas.drawString(2.5*inch, 0.7*inch, "engenharia@canalsolar.com.br | canalsolar.com.br")
-    canvas.drawString(2.5*inch, 0.55*inch, "(19)99605-9172 | (19) 99899-7915") 
+    canvas.drawString(2.5*inch, 1.6*inch, "Canal Solar - Consultoria & Serviços | Departamento de Engenharia")
+    canvas.drawString(2.5*inch, 1.45*inch, "R. Paulo César Fidélis, - Lot. Res. Vila Bella, Campinas - SP, 13087-727")
+    canvas.drawString(2.5*inch, 1.30*inch, "engenharia@canalsolar.com.br | canalsolar.com.br")
+    canvas.drawString(2.5*inch, 1.15*inch, "(19)99605-9172 | (19) 99899-7915") 
 
 
 # definição do modelo das outras paginas
@@ -83,9 +83,9 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,imag
 
     relatorio.append(Paragraph(f"Imagem Geral",conteudo_estilo))
     relatorio.append(Spacer(1,15))
-    img_ger = Image(img, width=340,height=190)
+    img_ger = Image(img, width=290,height=150)
     imagem_geral = [[img_ger]]
-    imagem_capa = Table(imagem_geral, colWidths=350, rowHeights=200) 
+    imagem_capa = Table(imagem_geral, colWidths=300, rowHeights=160) 
     imagem_capa.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                        ('ALIGN',(1,1),(-3,-3),'CENTER'),
@@ -94,11 +94,11 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,imag
     relatorio.append(imagem_capa)
     relatorio.append(Spacer(1,50))
 
-    relatorio.append(Paragraph("Relatório de Inspeção Visual",capa_estilo))
+    relatorio.append(Paragraph("Relatório de Inspeção Termográfica",capa_estilo))
     relatorio.append(Spacer(1,30))
 
     dados_tabela = [["Inspetor", inspetor],["Revisor",revisor],["Responsável","Bruno Kikumoto"]]
-    tabela_capa = Table(dados_tabela, colWidths=175, rowHeights=30) 
+    tabela_capa = Table(dados_tabela, colWidths=150, rowHeights=30) 
     tabela_capa.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                        ('ALIGN',(1,1),(-3,-3),'CENTER'),
@@ -119,7 +119,7 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,imag
 
     for i in range(num_items):
         dados_itens = [[f"Item {i+1} - {itens[i]}"]]
-        tabela_itens = Table(dados_itens, colWidths=350, rowHeights=30) 
+        tabela_itens = Table(dados_itens, colWidths=300, rowHeights=30) 
         tabela_itens.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                        ('ALIGN',(1,1),(-3,-3),'CENTER'),
@@ -127,9 +127,9 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,imag
                        ('TEXTCOLOR',(0,0),(1,-1),colors.black),('FONTSIZE', (0,0), (-1,-1), 12)]))
         relatorio.append(tabela_itens)
 
-        img_item = Image(imagens[i], width=340,height=190)
+        img_item = Image(imagens[i], width=290,height=150)
         dados_itens = [[img_item]]
-        tabela_itens = Table(dados_itens, colWidths=350, rowHeights=200) 
+        tabela_itens = Table(dados_itens, colWidths=300, rowHeights=160) 
         tabela_itens.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                        ('ALIGN',(1,1),(-3,-3),'CENTER'),
@@ -137,9 +137,9 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,imag
                        ('TEXTCOLOR',(0,0),(1,-1),colors.black),('FONTSIZE', (0,0), (-1,-1), 12)]))
         relatorio.append(tabela_itens)
 
-        img2_item = Image(imagens2[i], width=340,height=190)
+        img2_item = Image(imagens2[i], width=290,height=150)
         dados_itens = [[img2_item]]
-        tabela_itens = Table(dados_itens, colWidths=350, rowHeights=200) 
+        tabela_itens = Table(dados_itens, colWidths=300, rowHeights=160) 
         tabela_itens.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                        ('ALIGN',(1,1),(-3,-3),'CENTER'),
@@ -148,7 +148,7 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,imag
         relatorio.append(tabela_itens)
 
         dados_itens = [[f"Análise: {analises[i]}"],[f"Observação: {obs[i]}"]]
-        tabela_itens = Table(dados_itens, colWidths=350, rowHeights=30) 
+        tabela_itens = Table(dados_itens, colWidths=300, rowHeights=30) 
         tabela_itens.setStyle(TableStyle([('BOX', (0,0), (-1,-1), 0.25, colors.black),
                        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                        ('ALIGN',(1,1),(-3,-3),'CENTER'),
@@ -162,7 +162,7 @@ def gerar_pdf(ufv,cliente,img,inspetor,revisor,data,num_items,itens,imagens,imag
 
     doc.build(relatorio, onFirstPage=capa, onLaterPages=paginas)
     st.success("Relatório gerado com sucesso!")
-    st.download_button(label="Baixar PDF", data=buffer.getvalue(), file_name=f"relatorio_inspecao.pdf", mime="application/pdf")
+    st.download_button(label="Baixar PDF", data=buffer.getvalue(), file_name=f"relatorio_inspecao_{ufv}.pdf", mime="application/pdf")
     
 
 
@@ -175,19 +175,19 @@ def main():
     st.title("Relatório de Inspeção Visual")
 
     # inserção dos campos para recebimento dos valores do banco de dados
-    cursor.execute("SELECT * FROM Usinas")
+    cursor.execute("SELECT * FROM Usinas ORDER BY ufv")
     lista = []
     for linha in cursor.fetchall():
         lista.append(linha[1])
     ufv = st.selectbox("UFV:",lista)
 
-    cursor.execute("SELECT * FROM Clientes")
+    cursor.execute("SELECT * FROM Clientes ORDER BY nome")
     lista = []
     for linha in cursor.fetchall():
         lista.append(linha[1])
     cliente = st.selectbox("Cliente",lista)
 
-    cursor.execute("SELECT * FROM Funcionarios")
+    cursor.execute("SELECT * FROM Funcionarios ORDER BY nome")
     lista = []
     for linha in cursor.fetchall():
         lista.append(linha[1])
@@ -211,7 +211,7 @@ def main():
     # inserção dos campos dos itens de acordo com o número de itens
     for i in range(num_items):
         st.subheader(f"Item {i+1}")
-        cursor.execute("SELECT * FROM Equipamentos")
+        cursor.execute("SELECT * FROM Equipamentos ORDER BY nome")
         lista = []
         for linha in cursor.fetchall():
             lista.append(linha[1])
