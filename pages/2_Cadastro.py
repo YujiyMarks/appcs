@@ -26,7 +26,7 @@ if st.button("Cadastrar cliente"):
 
 
 ufv = st.text_input("Digite o nome da usina a ser cadastrada e escolha o cliente:")
-cursor.execute("SELECT * FROM Clientes")
+cursor.execute("SELECT * FROM Clientes ORDER BY nome")
 lista = []
 for linha in cursor.fetchall():
     lista.append(linha[1])
@@ -35,15 +35,20 @@ if st.button("Cadastrar UFV"):
     cursor.execute(f"INSERT INTO Usinas (UFV, Cliente) VALUES ('{ufv}','{cliente_ufv}')")
     dados.commit()
 
-equipamento = st.text_input("Digite o nome do equipamento a ser cadastrado:")
-if st.button("Cadastrar equipamento"):
+equipamento = st.text_input("Digite o nome do equipamento termográfico a ser cadastrado:")
+if st.button("Cadastrar equipamento termográfico"):
     cursor.execute(f"INSERT INTO Equipamentos (nome) VALUES ('{equipamento}')")
+    dados.commit()
+
+equipamento = st.text_input("Digite o nome do equipamento visual a ser cadastrado:")
+if st.button("Cadastrar equipamento visual"):
+    cursor.execute(f"INSERT INTO EquipamentosVisual (nome) VALUES ('{equipamento}')")
     dados.commit()
 
 
 st.header("Remoção")
 
-cursor.execute("SELECT * FROM Funcionarios")
+cursor.execute("SELECT * FROM Funcionarios ORDER BY nome")
 lista = []
 for linha in cursor.fetchall():
     lista.append(linha[1])
@@ -52,7 +57,7 @@ if st.button("Remover funcionário"):
     cursor.execute(f"DELETE FROM Funcionarios WHERE nome = '{func_item}'")
     dados.commit()
 
-cursor.execute("SELECT * FROM Clientes")
+cursor.execute("SELECT * FROM Clientes ORDER BY nome")
 lista = []
 for linha in cursor.fetchall():
     lista.append(linha[1])
@@ -61,11 +66,20 @@ if st.button("Remover cliente"):
     cursor.execute(f"DELETE FROM Clientes WHERE nome = '{cliente_item}'")
     dados.commit()
 
-cursor.execute("SELECT * FROM Equipamentos")
+cursor.execute("SELECT * FROM Equipamentos ORDER BY nome")
 lista = []
 for linha in cursor.fetchall():
     lista.append(linha[1])
-equip_item = st.selectbox(f"Escolha o equipamento a ser removido",lista)
-if st.button("Remover equipamento"):
+equip_item = st.selectbox(f"Escolha o equipamento termográfico a ser removido",lista)
+if st.button("Remover equipamento termográfico"):
+    cursor.execute(f"DELETE FROM Equipamentos WHERE nome = '{equip_item}'")
+    dados.commit()
+
+cursor.execute("SELECT * FROM EquipamentosVisual ORDER BY nome")
+lista = []
+for linha in cursor.fetchall():
+    lista.append(linha[1])
+equip_item = st.selectbox(f"Escolha o equipamento visual a ser removido",lista)
+if st.button("Remover equipamento visual"):
     cursor.execute(f"DELETE FROM Equipamentos WHERE nome = '{equip_item}'")
     dados.commit()
