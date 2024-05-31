@@ -211,7 +211,7 @@ def main():
     # inserção dos campos dos itens de acordo com o número de itens
     for i in range(num_items):
         st.subheader(f"Item {i+1}")
-        cursor.execute("SELECT * FROM Equipamentos ORDER BY nome")
+        cursor.execute("SELECT * FROM EquipamentosVisual ORDER BY nome")
         lista = []
         for linha in cursor.fetchall():
             lista.append(linha[1])
