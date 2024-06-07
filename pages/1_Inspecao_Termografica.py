@@ -222,11 +222,11 @@ def main():
         imagem = st.file_uploader(f"Insira a 1º imagem do item {i+1}:",type=['jpg','png'])
         imagens.append(imagem)
         if imagem is not None:
-            st.image(imagens, use_column_width='always')
+            st.image(imagem, use_column_width='always')
         imagem2 = st.file_uploader(f"Insira a 2º imagem do item {i+1}:",type=['jpg','png'])
         imagens2.append(imagem2)
         if imagem2 is not None:
-            st.image(imagens2, use_column_width='always')
+            st.image(imagem2, use_column_width='always')
         analise = st.radio(f"Análise do item {i+1}:",["C","NC","NA","PA"],horizontal=True)
         analises.append(analise)
         observacao = st.text_input(f"Digite a observação do item {i+1}:")
